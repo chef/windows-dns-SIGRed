@@ -1,0 +1,10 @@
+name: windows-dns-SIGRed
+title: CVE-2020-1350
+maintainer: James Massardo
+copyright: Chef Software Inc.
+copyright_email: james@dxrf.com
+license: Apache-2.0
+summary: Inspec profile to dectect systems vulnerable to CVE-2020-1350 | Windows DNS Server Remote Code Execution Vulnerability
+version: 0.1.0
+supports:
+  platform: windows
