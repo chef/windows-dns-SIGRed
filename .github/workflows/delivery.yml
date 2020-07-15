@@ -1,0 +1,53 @@
+---
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  windows:
+    runs-on: windows-2019
+    steps:
+      - name: Check out code
+        uses: actions/checkout@master
+      - name: Install Chef Workstation
+        run: . { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -channel stable -project chef-workstation
+        shell: powershell
+      - name: Add Chef Workstation to PATH
+        run: echo "##[add-path]C:\opscode\chef-workstation\bin\;"
+        shell: powershell
+      - name: Verify Inspec Profile
+        run: inspec check .
+        shell: powershell
+        env:
+          CHEF_LICENSE: accept-no-persist
+      - name: Run Inspec Test
+        run: inspec exec .
+        shell: powershell
+        continue-on-error: true
+        env:
+          CHEF_LICENSE: accept-no-persist
+  windows-with-dns:
+    runs-on: windows-2019
+    steps:
+      - name: Check out code
+        uses: actions/checkout@master
+      - name: Install Chef Workstation
+        run: . { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -channel stable -project chef-workstation
+        shell: powershell
+      - name: Add Chef Workstation to PATH
+        run: echo "##[add-path]C:\opscode\chef-workstation\bin\;"
+        shell: powershell
+      - name: Install DNS Feature
+        run: Install-WindowsFeature DNS
+        shell: powershell
+      - name: Verify Inspec Profile
+        run: inspec check .
+        shell: powershell
+        env:
+          CHEF_LICENSE: accept-no-persist
+      - name: Run Inspec Test
+        run: inspec exec .
+        shell: powershell
+        continue-on-error: true
+        env:
+          CHEF_LICENSE: accept-no-persist
